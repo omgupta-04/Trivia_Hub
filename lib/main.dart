@@ -36,7 +36,7 @@ class Question {
     required this.correctIndex,
   });
 
-  factory Question.fromJson( json) {
+  factory Question.fromJson(Map<String, dynamic> json) {
     List<String> options = List<String>.from(json['incorrect_answers']);
     options.add(json['correct_answer']);
     options.shuffle();
@@ -178,32 +178,37 @@ class quizScreenState extends State<QuizScreen> {
         padding: const EdgeInsets.all(16.0),
         child: showResult
             ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  isCorrect ? "Correct!" : "Incorrect!",
-                  style: TextStyle(fontSize: 24),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Score: $score",
-                  style: TextStyle(fontSize: 24),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: nextQuestion,
-                  child: Text(currentQuestionIndex == questions.length - 1 ? "Finish Quiz" : "Next Question", style: TextStyle(color: Colors.black)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreenAccent),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: resetQuiz,
-                  child: Text("Reset Quiz", style: TextStyle(color: Colors.black)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                ),
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                isCorrect ? "Correct!" : "Incorrect!",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Score: $score",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Correct Answer: ${currentQuestion.options[currentQuestion.correctIndex]}",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: nextQuestion,
+                child: Text(currentQuestionIndex == questions.length - 1 ? "Finish Quiz" : "Next Question", style: TextStyle(color: Colors.black)),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreenAccent),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: resetQuiz,
+                child: Text("Reset Quiz", style: TextStyle(color: Colors.black)),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              ),
+            ],
+          ),
         )
             : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,9 +220,28 @@ class quizScreenState extends State<QuizScreen> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreenAccent),
             ),
             SizedBox(height: 20),
-            Text(
-              "Question ${currentQuestionIndex + 1}: ${currentQuestion.text}",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Question ${currentQuestionIndex + 1} of ${questions.length}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      currentQuestion.text,
+                      style: TextStyle(fontSize: 22),
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 20),
             Text(
